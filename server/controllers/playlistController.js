@@ -1,12 +1,11 @@
-const   Playlist = require("../models/playlistModel");
+const   Playlist = require("../models/playlistModels");
 
 /**
- * Creates a playlist
  *
  * @param {*} req
  * @param {*} res
  */
-const playlistPost = (req, res) => {
+const videoPost = (req, res) => {
   let playlist = new Playlist();
 
   playlist.name = req.body.name;
@@ -27,45 +26,32 @@ const playlistPost = (req, res) => {
 };
 
 /**
- * Get all playlists
  *
  * @param {*} req
  * @param {*} res
  */
-const playlistGet = (req, res) => {
+const videoGet = (req, res) => { 
     if (req.query && req.query.id) {
-        Playlist.findById(req.query.id)
-            .then(playlist => {
-                if (!playlist) {
-                    res.status(404).json({ error: "Playlist doesn't exist" });
-                } else {
-                    res.json(playlist);
-                }
+        Playlist.find({ user: req.query.id })
+            .then(playlists => {
+                res.json(playlists);
             })
             .catch(err => {
                 console.log('error while querying the playlist', err);
                 res.status(500).json({ error: "Internal server error" });
             });
     } else {
-        Playlist.find()
-            .then(playlists => {
-                res.json(playlists);
-            })
-            .catch(err => {
-                res.status(500).json({ error: err.message });
-            });
+        res.status(400).json({ error: "Missing 'id' parameter in query" });
     }
 };
 
 
 /**
- * Updates a playlist
  *
  * @param {*} req
  * @param {*} res
  */
-const playlistPatch = (req, res) => {
-    // get playlist by id
+const videoPatch = (req, res) => {
     if (req.query && req.query.id) {
         Playlist.findByIdAndUpdate(req.query.id, req.body, { new: true })
             .then(playlist => {
@@ -85,13 +71,11 @@ const playlistPatch = (req, res) => {
 };
 
 /**
- * Deletes a playlist
  *
  * @param {*} req
  * @param {*} res
  */
-const playlistDelete = (req, res) => {
-    // get playlist by id
+const videoDelete = (req, res) => {
     if (req.query && req.query.id) {
         Playlist.findByIdAndDelete(req.query.id)
             .then(playlist => {
@@ -111,8 +95,8 @@ const playlistDelete = (req, res) => {
 };
 
 module.exports = {
-  playlistGet,
-  playlistPost,
-  playlistPatch,
-  playlistDelete
+  videoGet,
+  videoPost,
+  videoPatch,
+  videoDelete
 }
