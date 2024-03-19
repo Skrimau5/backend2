@@ -18,9 +18,9 @@ app.use(cors({
   methods: "*"
 }));
 
-app.get("/api/profiles/",userGet);
-app.get("/api/profileLogin/",loginGet);
-app.post("/api/profiles", userPost);
+app.get("/api/users/",userGet);
+app.get("/api/userLogin/",loginGet);
+app.post("/api/users", userPost);
 
 app.get("/api/playlists/",videoGet);
 app.post("/api/playlists", videoPost);
