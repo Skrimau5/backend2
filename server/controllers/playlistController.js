@@ -1,6 +1,7 @@
-const   Playlist = require("../models/playlistModels");
+const   Playlist = require("../models/playlistModel");
 
 /**
+ * Creates a playlist
  *
  * @param {*} req
  * @param {*} res
@@ -10,9 +11,9 @@ const videoPost = (req, res) => {
 
   playlist.name = req.body.name;
   playlist.url  = req.body.url;
-  playlist.user  = req.body.user;
+  playlist.collection= req.body.collection;
 
-  if (playlist.name && playlist.url) {
+  if (playlist.name && playlist.url&&playlist.collection) {
     playlist.save()
         .then(savedPlaylist => {
             res.status(201).json(savedPlaylist);
@@ -26,13 +27,14 @@ const videoPost = (req, res) => {
 };
 
 /**
+ * Get all playlists
  *
  * @param {*} req
  * @param {*} res
  */
 const videoGet = (req, res) => { 
     if (req.query && req.query.id) {
-        Playlist.find({ user: req.query.id })
+        Playlist.find({ collection: req.query.id })
             .then(playlists => {
                 res.json(playlists);
             })
@@ -47,11 +49,13 @@ const videoGet = (req, res) => {
 
 
 /**
+ * Updates a playlist
  *
  * @param {*} req
  * @param {*} res
  */
 const videoPatch = (req, res) => {
+    // get playlist by id
     if (req.query && req.query.id) {
         Playlist.findByIdAndUpdate(req.query.id, req.body, { new: true })
             .then(playlist => {
@@ -71,11 +75,13 @@ const videoPatch = (req, res) => {
 };
 
 /**
+ * Deletes a playlist
  *
  * @param {*} req
  * @param {*} res
  */
 const videoDelete = (req, res) => {
+    // get playlist by id
     if (req.query && req.query.id) {
         Playlist.findByIdAndDelete(req.query.id)
             .then(playlist => {
